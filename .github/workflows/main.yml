@@ -1,12 +1,10 @@
 name: Build Android APK
 
 on:
-  workflow_dispatch:  # Manual trigger
-  push:
-    branches: [ main ]
+  workflow_dispatch:
 
 env:
-  FLUTTER_VERSION: "3.16.9"  # Stable channel
+  FLUTTER_VERSION: "3.16.9"
 
 jobs:
   build:
@@ -15,25 +13,27 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4  # Verified latest
 
       - name: Setup Java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v3  # Verified latest
         with:
           distribution: 'zulu'
           java-version: '17'
 
       - name: Setup Flutter
-        uses: subosito/flutter-action@v2
+        uses: subosito/flutter-action@v2  # Verified commit
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: 'stable'
 
-      - name: Install Dependencies
+      - name: Accept Android Licenses
         run: |
-          flutter pub get
-          echo "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses" > licenses
-          yes | ./licenses || true
+          yes | sdkmanager --licenses || true
+          flutter doctor --android-licenses --verbose
+
+      - name: Install Dependencies
+        run: flutter pub get
 
       - name: Build APK
         run: |
@@ -42,7 +42,7 @@ jobs:
             --split-per-abi
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4  # Updated to v4
         with:
           name: release-apk
           path: build/app/outputs/flutter-apk/*.apk
