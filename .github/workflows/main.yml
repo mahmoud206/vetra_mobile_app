@@ -1,4 +1,4 @@
-name: Build Android APK-2
+name: Build Android APK -4
 
 on:
   workflow_dispatch:
@@ -7,6 +7,7 @@ on:
 
 env:
   FLUTTER_VERSION: "3.16.9"
+  ANDROID_HOME: /usr/local/lib/android/sdk
 
 jobs:
   build:
@@ -23,17 +24,21 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: 'stable'
+          add-to-path: true
 
-      - name: Accept Android Licenses (Fixed)
+      - name: Accept Android Licenses
         run: |
           mkdir -p ~/.android
           touch ~/.android/repositories.cfg
-          yes | sdkmanager --licenses
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
           flutter doctor --android-licenses -y
 
       - name: Install Dependencies
