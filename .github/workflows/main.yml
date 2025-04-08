@@ -1,4 +1,4 @@
-name: Build Flutter Android App - 93
+name: Build Flutter Android App -99
 
 on:
   push:
@@ -24,11 +24,11 @@ jobs:
           java-version: '17' # Use Java 17 (compatible with Flutter)
           distribution: 'temurin'
 
-      # Step 3: Install Flutter SDK manually
+      # Step 3: Install Flutter SDK
       - name: Install Flutter SDK
-        run: |
-          git clone https://github.com/flutter/flutter.git -b stable ~/flutter
-          echo "$HOME/flutter/bin" >> $GITHUB_PATH
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.13.0' # Specify the Flutter version you are using
 
       # Step 4: Install Android dependencies
       - name: Install Android dependencies
@@ -42,7 +42,7 @@ jobs:
 
       # Step 6: Upload the APK as an artifact
       - name: Upload APK
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@abc1234567890abcdef1234567890abcdef1234
         with:
           name: app-release.apk
           path: build/app/outputs/flutter-apk/app-release.apk
