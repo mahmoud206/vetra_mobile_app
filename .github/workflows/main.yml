@@ -6,7 +6,7 @@ on:
     branches: [ main ]
 
 env:
-  FLUTTER_VERSION: "3.16.9"
+  FLUTTER_VERSION: "3.29.0"
   ANDROID_HOME: /usr/local/lib/android/sdk
 
 jobs:
