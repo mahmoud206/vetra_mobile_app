@@ -26,7 +26,7 @@ jobs:
 
       # Step 3: Install Flutter SDK
       - name: Install Flutter SDK
-        uses: subosito/flutter-action@v2
+        uses: subosito/flutter-action@v4
         with:
           flutter-version: '3.13.0' # Specify the Flutter version you are using
 
