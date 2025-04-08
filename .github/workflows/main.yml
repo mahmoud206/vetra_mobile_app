@@ -1,0 +1,48 @@
+name: Build Android APK
+
+on:
+  workflow_dispatch:  # Manual trigger
+  push:
+    branches: [ main ]
+
+env:
+  FLUTTER_VERSION: "3.16.9"  # Stable channel
+
+jobs:
+  build:
+    name: Build APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: 'stable'
+
+      - name: Install Dependencies
+        run: |
+          flutter pub get
+          echo "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses" > licenses
+          yes | ./licenses || true
+
+      - name: Build APK
+        run: |
+          flutter build apk --release \
+            --dart-define=APP_ENV=prod \
+            --split-per-abi
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: release-apk
+          path: build/app/outputs/flutter-apk/*.apk
