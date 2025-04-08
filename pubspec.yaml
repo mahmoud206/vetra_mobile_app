@@ -1,0 +1,37 @@
+name: vet_analytics
+description: Veterinary Analytics App
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  http: ^1.1.0
+  provider: ^6.0.5
+  syncfusion_flutter_charts: ^29.1.35
+  lottie: ^2.5.0
+  intl: ^0.19.0
+  pdf: ^3.10.0
+  printing: ^5.10.0
+  share_plus: ^7.0.0
+  flutter_localizations:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/fonts/
+    - assets/animations/
+
+  fonts:
+    - family: Tajawal
+      fonts:
+        - asset: assets/fonts/Tajawal-Bold.ttf
