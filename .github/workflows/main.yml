@@ -1,7 +1,9 @@
-name: Build Android APK -1
+name: Build Android APK-2
 
 on:
   workflow_dispatch:
+  push:
+    branches: [ main ]
 
 env:
   FLUTTER_VERSION: "3.16.9"
@@ -13,24 +15,26 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4  # Verified latest
+        uses: actions/checkout@v4
 
       - name: Setup Java
-        uses: actions/setup-java@v3  # Verified latest
+        uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
           java-version: '17'
 
       - name: Setup Flutter
-        uses: subosito/flutter-action@v2  # Verified commit
+        uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: 'stable'
 
-      - name: Accept Android Licenses
+      - name: Accept Android Licenses (Fixed)
         run: |
-          yes | sdkmanager --licenses || true
-          flutter doctor --android-licenses --verbose
+          mkdir -p ~/.android
+          touch ~/.android/repositories.cfg
+          yes | sdkmanager --licenses
+          flutter doctor --android-licenses -y
 
       - name: Install Dependencies
         run: flutter pub get
@@ -42,7 +46,7 @@ jobs:
             --split-per-abi
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4  # Updated to v4
+        uses: actions/upload-artifact@v4
         with:
           name: release-apk
           path: build/app/outputs/flutter-apk/*.apk
