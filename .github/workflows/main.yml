@@ -1,48 +1,57 @@
-name: Build Flutter Android App - 100
+name: Build Android APK
 
 on:
+  workflow_dispatch:
   push:
-    branches:
-      - main # Trigger the workflow on pushes to the main branch
-  pull_request:
-    branches:
-      - main # Trigger the workflow on pull requests to the main branch
+    branches: [ main ]
+
+env:
+  FLUTTER_VERSION: "3.16.9"
+  ANDROID_HOME: /usr/local/lib/android/sdk
 
 jobs:
   build:
+    name: Build APK
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the repository
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-      # Step 2: Set up Java JDK (required for Android builds)
-      - name: Set up JDK
+      - name: Setup Java
         uses: actions/setup-java@v3
         with:
-          java-version: '17' # Use Java 17 (compatible with Flutter)
-          distribution: 'temurin'
+          distribution: 'zulu'
+          java-version: '17'
 
-      # Step 3: Install Flutter SDK manually
-      - name: Install Flutter SDK
-        run: |
-          git clone https://github.com/flutter/flutter.git -b stable ~/flutter
-          echo "$HOME/flutter/bin" >> $GITHUB_PATH
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
 
-      # Step 4: Install Android dependencies
-      - name: Install Android dependencies
-        run: |
-          flutter doctor --android-licenses || echo "Android licenses failed"
-          flutter pub get || exit 1
-
-      # Step 5: Build the Android APK
-      - name: Build Android APK
-        run: flutter build apk --release
-
-      # Step 6: Upload the APK as an artifact
-      - name: Upload APK
-        uses: actions/upload-artifact@a823f2bfbdb6c33e8d1e1e2f7b9c4e7a1f2b3c4d
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
         with:
-          name: app-release.apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: 'stable'
+          add-to-path: true
+
+      - name: Accept Licenses (Alternative)
+        run: |
+          mkdir -p ~/.android
+          touch ~/.android/repositories.cfg
+          echo -e "\n24333f8a63b6825ea9c5514f83c2829b004d1fee" > ~/.android/licenses.cfg
+          echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" >> ~/.android/licenses.cfg
+
+      - name: Install Dependencies
+        run: flutter pub get
+
+      - name: Build APK
+        run: |
+          flutter build apk --release \
+            --dart-define=APP_ENV=prod \
+            --split-per-abi
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-apk
+          path: build/app/outputs/flutter-apk/*.apk
