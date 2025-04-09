@@ -1,15 +1,22 @@
-name: vet_analytics
-description: Veterinary Analytics App
+name: vetratech_mobile_app
+description: A Flutter app for veterinary reports.
+
+publish_to: 'none' # Remove this line if you want to publish to pub.dev
 
 version: 1.0.0+1
 
 environment:
+<<<<<<< Updated upstream
   sdk: '>=3.0.0 <4.0.0'
   flutter: '>=3.16.0'
+=======
+  sdk: '>=3.7.0 <4.0.0'
+>>>>>>> Stashed changes
 
 dependencies:
   flutter:
     sdk: flutter
+<<<<<<< Updated upstream
   http: ^1.1.0
   provider: ^6.0.5
   syncfusion_flutter_charts: ^28.2.12
@@ -18,8 +25,22 @@ dependencies:
   pdf: ^3.10.0
   printing: ^5.10.0
   share_plus: ^7.0.0
+=======
+  http: ^1.3.0
+  pdf: ^3.11.3
+  path_provider: ^2.1.5
+  provider: ^6.1.4
+  animated_text_kit: ^4.2.3
+  shimmer: ^3.0.0
+>>>>>>> Stashed changes
   flutter_localizations:
     sdk: flutter
+  intl: ^0.19.0
+  google_fonts: ^6.2.1
+  go_router: ^14.8.1
+  syncfusion_flutter_pdfviewer: ^29.1.37
+  share_plus: ^10.1.4
+  syncfusion_flutter_datepicker: ^29.1.37 # Replaces date_range_picker
 
 dev_dependencies:
   flutter_test:
@@ -30,9 +51,12 @@ flutter:
   uses-material-design: true
   assets:
     - assets/fonts/
-    - assets/animations/
-
+    - assets/images/
   fonts:
-    - family: Tajawal
+    - family: ArabicFont
       fonts:
+<<<<<<< Updated upstream
         - asset: assets/fonts/Tajawal-Bold.ttf
+=======
+        - asset: assets/fonts/Amiri-Bold.ttf
+>>>>>>> Stashed changes
